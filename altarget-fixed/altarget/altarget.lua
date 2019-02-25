@@ -251,8 +251,9 @@ function AL_ON_TARGET_UPDATE()
 	local monRank = monCls.MonRank;
 	local groupName = monCls.GroupName
 	
-	-- print (monCls.ClassID..' rank='..monRank..' name='..groupName)
-
+	print (monCls.ClassID..' rank='..monRank..' name='..groupName)
+	-- print (SCR_Get_MON_HR(monCls)..' '..SCR_Get_MON_CRTDR(monCls))
+	
 	if	monRank == "Material" and groupName ~= "Monster" then
 		frame:ShowWindow(0);
 		return;
@@ -277,7 +278,10 @@ function AL_ON_TARGET_UPDATE()
 	local color = "CCFFFFFF";
 	--title:SetText("{#00FF33}{@st40}"..monRank.."{/}{/}");
 
-	if monRank == "NPC" or monRank == "MISC" or (monRank == "Material" and SCR_Get_MON_HR(monCls)*SCR_Get_MON_CRTDR(monCls) == 1) then
+	if monRank == "NPC" or
+	monRank == "MISC" or
+	monRank == "Pet" or
+	(monRank == "Material" and SCR_Get_MON_HR(monCls)*SCR_Get_MON_CRTDR(monCls) <= 2) then
 		color = "DD00FF33";
 		y = -10;
 		--title:SetText("{#00FF33}{@st40}"..monRank.."{/}{/}");
@@ -309,6 +313,7 @@ function AL_ON_TARGET_UPDATE()
 			monCls.Lv = monCls.Level
 			
 			local hitrate = SCR_Get_MON_DR(monCls) / pc.HR;
+			-- print (SCR_Get_MON_DR(monCls)..' '..pc.HR)
 			if hitrate < 1 then
 				hitrate = 1;
 			end
@@ -320,6 +325,7 @@ function AL_ON_TARGET_UPDATE()
 				avoidrate = 1;
 			end
 			avoidrate = math.floor(((avoidrate^0.65)-1)*100);
+			if avoidrate > 100 then avoidrate = 100 end
 
 			local crirate = pc.CRTHR / SCR_Get_MON_CRTDR(monCls);
 			-- print (pc.CRTHR..' '..SCR_Get_MON_CRTDR(monCls))
@@ -327,6 +333,7 @@ function AL_ON_TARGET_UPDATE()
 				crirate = 1;
 			end
 			crirate = math.floor(((crirate^0.6)-1)*100);
+			if crirate > 100 then crirate = 100 end
 
 			--title:SetText("{@st42}{#FFCC66}"..tostring(handle)..":"..tostring(handle).."{/}{/}");
 			if g.settings.hitflg then
