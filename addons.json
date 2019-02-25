@@ -1,9 +1,9 @@
 [
 	{
 		"name" : "Altarget Fixed",
-		"file" : "altarget-fixed",
+		"file" : "altarget",
 		"extension" : "ipf",
-		"fileVersion" : "v1.1.1",
+		"fileVersion" : "v1.1.0",
 		"releaseTag" : "altarget",
 		"unicode" : "⛄",
 		"updateInfo":"v1.1 updated crit, accuracy, and dodge computations. fixed ui not showing on some monsters",
@@ -14,7 +14,7 @@
 	},
 	{
 		"name" : "Bookmarkwarp Fixed",
-		"file" : "bookmarkwarp-fixed",
+		"file" : "bookmarkwarp",
 		"extension" : "ipf",
 		"fileVersion" : "v1.1.0",
 		"releaseTag" : "altarget",
@@ -27,7 +27,7 @@
 	},
 	{
 		"name" : "Cdtracker Fixed",
-		"file" : "cdtracker-fixed",
+		"file" : "cdtracker",
 		"extension" : "ipf",
 		"fileVersion" : "v1.1.0",
 		"releaseTag" : "altarget",
