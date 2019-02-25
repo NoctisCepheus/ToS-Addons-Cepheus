@@ -3,10 +3,10 @@
 		"name" : "Altarget Fixed",
 		"file" : "altarget",
 		"extension" : "ipf",
-		"fileVersion" : "v1.1.0",
+		"fileVersion" : "v1.1.1",
 		"releaseTag" : "altarget",
 		"unicode" : "⛄",
-		"updateInfo":"v1.1 updated crit, accuracy, and dodge computations. fixed ui not showing on some monsters",
+		"updateInfo":"updated crit, accuracy, and dodge computations. fixed ui not showing on some monsters",
 		"description" : "continuation of altarget addon post-re:build",
 		"tags" : [
 			"target"
@@ -16,26 +16,26 @@
 		"name" : "Bookmarkwarp Fixed",
 		"file" : "bookmarkwarp",
 		"extension" : "ipf",
-		"fileVersion" : "v1.1.0",
-		"releaseTag" : "altarget",
+		"fileVersion" : "v1.1.1",
+		"releaseTag" : "bookmarkwarp",
 		"unicode" : "⛄",
-		"updateInfo":"v1.1 fixed not being able to drag ui and not being able to remove bookmark",
+		"updateInfo":"fixed not being able to drag ui and not being able to remove bookmark",
 		"description" : "continuation of bookmarkwarp addon post-re:build",
 		"tags" : [
-			"target"
+			"warp"
 		]
 	},
 	{
 		"name" : "Cdtracker Fixed",
 		"file" : "cdtracker",
 		"extension" : "ipf",
-		"fileVersion" : "v1.1.0",
-		"releaseTag" : "altarget",
+		"fileVersion" : "v1.1.1",
+		"releaseTag" : "cdtracker",
 		"unicode" : "⛄",
-		"updateInfo":"v1.1 fixed yellow text not showing after 19/02/19 update. fixed not being able to leave set message blank",
+		"updateInfo":"fixed yellow text not showing after 19/02/19 update. fixed not being able to leave set message blank",
 		"description" : "continuation of cdtracker addon post-re:build",
 		"tags" : [
-			"target"
+			"cooldown"
 		]
 	}
 ]
