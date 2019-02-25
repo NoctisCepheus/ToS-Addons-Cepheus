@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skinset name="Base">
+    <imagelist category="cdtracker_buttons">
+		<image name="addonmenu_cdtracker" file="\skin\cdtracker.tga" imgrect="76 44 38 44" CMM_Caption="Cooldown Tracker"/>
+		<image name="addonmenu_cdtracker_cursoron" file="\skin\cdtracker.tga" imgrect="76 44 38 44"/>
+		<image name="addonmenu_cdtracker_clicked" file="\skin\cdtracker.tga" imgrect="76 44 38 44"/>
+	</imagelist>
+</skinset>
