@@ -3,7 +3,7 @@
 		"name" : "Altarget Fixed",
 		"file" : "altarget-fixed",
 		"extension" : "ipf",
-		"fileVersion" : "v1.1.0",
+		"fileVersion" : "v1.1.1",
 		"releaseTag" : "altarget",
 		"unicode" : "⛄",
 		"updateInfo":"v1.1 updated crit, accuracy, and dodge computations. fixed ui not showing on some monsters",
