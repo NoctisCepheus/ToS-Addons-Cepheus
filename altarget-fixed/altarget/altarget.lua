@@ -225,6 +225,7 @@ function AL_ON_TARGET()
 	local y = -50;
 	local scale = 1;
 	scale,y = AL_ON_TARGET_UPDATE();
+	
 	if frame:IsVisible() == 0 then
 		CHAT_SYSTEM("invisible");
 		return;
@@ -251,7 +252,7 @@ function AL_ON_TARGET_UPDATE()
 	local monRank = monCls.MonRank;
 	local groupName = monCls.GroupName
 	
-	print (monCls.ClassID..' rank='..monRank..' name='..groupName)
+	-- print (monCls.ClassID..' rank='..monRank..' name='..groupName)
 	-- print (SCR_Get_MON_HR(monCls)..' '..SCR_Get_MON_CRTDR(monCls))
 	
 	if	monRank == "Material" and groupName ~= "Monster" then
@@ -277,7 +278,7 @@ function AL_ON_TARGET_UPDATE()
 	local y = -50;
 	local color = "CCFFFFFF";
 	--title:SetText("{#00FF33}{@st40}"..monRank.."{/}{/}");
-
+	
 	if monRank == "NPC" or
 	monRank == "MISC" or
 	monRank == "Pet" or
@@ -332,8 +333,9 @@ function AL_ON_TARGET_UPDATE()
 			if crirate < 1 then
 				crirate = 1;
 			end
+			-- print (crirate)
 			crirate = math.floor(((crirate^0.6)-1)*100);
-			if crirate > 100 then crirate = 100 end
+			if crirate > 50 then crirate = AL_CHECK_EQUIP(crirate) end
 
 			--title:SetText("{@st42}{#FFCC66}"..tostring(handle)..":"..tostring(handle).."{/}{/}");
 			if g.settings.hitflg then
@@ -368,6 +370,7 @@ function AL_ON_TARGET_UPDATE()
 	itembgimg:SetColorTone(color);
 	AL_CHANGE_SCALE(frame, scale);
 	-- 補正
+	
 	local _fieldFrame = ui.GetFrame("fieldui");
 	local _h = (_fieldFrame:GetHeight()-1080)/2;
 	y = y - _h;
@@ -418,3 +421,25 @@ function AL_ON_TARGET_CLEAR(msgFrame, msg, argStr, handle)
 	local frame= g.frame;
 	frame:ShowWindow(0);
 end
+
+function AL_CHECK_EQUIP(crirate)
+	
+	local eqlist = session.GetEquipItemList()
+	local eqType = {"SHIRT", "GLOVES", "PANTS", "BOOTS"};
+	
+	for i = 1, #eqType do
+
+		local num = item.GetEquipSpotNum(eqType[i])
+		local eq = eqlist:GetEquipItemByIndex(num)
+		local obj = GetIES(eq:GetObject());
+		
+		if obj.Material ~= 'Leather' then
+			return '[50]'
+		end
+	end
+	if crirate > 60 then
+		return '[60]'
+	end
+	return crirate
+end
+	
