@@ -161,17 +161,17 @@ function AL_UNLOCKTARGET()
 end
 
 function AL_ON_TARGET()
-	print ('AL_ON_TARGET')
+	-- print ('AL_ON_TARGET')
 	local g = _G['ADDONS']['MONOGUSA']['ALTARGET'];
-
+	
 	local frame = g.frame;
 	local handle = session.GetTargetHandle();
 	local actor = world.GetActor(handle);
-
+	
 	if actor == nil then
 		return;
 	end
-
+	
 	if frame:GetUserIValue("CurrentTarget") ~= nil then
 		local prevHandle = frame:GetUserIValue("CurrentTarget");
 		frame:SetUserValue("PrevTarget", prevHandle);
@@ -179,7 +179,7 @@ function AL_ON_TARGET()
 
 	frame:SetUserValue("CurrentTarget", handle);
 	--frame:ShowWindow(1);
-
+	
 	local monCls = GetClassByType("Monster", actor:GetType());
 	local monRank = monCls.MonRank;
 	local groupName = monCls.GroupName
@@ -187,7 +187,7 @@ function AL_ON_TARGET()
 	if monCls == nil then
 		return;
 	end
-
+	
 	-- print ('rank='..monRank..' name='..groupName)
 
 	if monRank == "Material" and groupName ~= "Monster" then
@@ -195,7 +195,7 @@ function AL_ON_TARGET()
 		frame:ShowWindow(0);
 		return;
 	end
- print ("pass")
+
 	local itembgimg = GET_CHILD_RECURSIVELY(frame, "itembgimg");
 	local itemimg = GET_CHILD_RECURSIVELY(frame, "itemimg");
 	local title = GET_CHILD_RECURSIVELY(frame, "title");
@@ -221,7 +221,7 @@ function AL_ON_TARGET()
 	else
 		itemimg:ShowWindow(0);
 	end
-
+	
 	local y = -50;
 	local scale = 1;
 	scale,y = AL_ON_TARGET_UPDATE();
@@ -236,9 +236,9 @@ function AL_ON_TARGET()
 end
 
 function AL_ON_TARGET_UPDATE()
-	print ('AL_ON_TARGET_UPDATE')
+	-- print ('AL_ON_TARGET_UPDATE')
 	local g = _G['ADDONS']['MONOGUSA']['ALTARGET'];
-
+	
 	local frame = g.frame;
 	local handle = session.GetTargetHandle();
 	local actor = world.GetActor(handle);
@@ -250,15 +250,14 @@ function AL_ON_TARGET_UPDATE()
 	local monCls = GetClassByType("Monster", actor:GetType());
 	local monRank = monCls.MonRank;
 	local groupName = monCls.GroupName
-
-	-- print ('rank='..monRank..' name='..groupName)
+	
+	-- print (monCls.ClassID..' rank='..monRank..' name='..groupName)
 
 	if	monRank == "Material" and groupName ~= "Monster" then
-		-- print ("off")
 		frame:ShowWindow(0);
 		return;
 	end
-
+	
 	local itembgimg = GET_CHILD_RECURSIVELY(frame, "itembgimg");
 	local itemimg = GET_CHILD_RECURSIVELY(frame, "itemimg");
 	local title = GET_CHILD_RECURSIVELY(frame, "title");
@@ -278,7 +277,7 @@ function AL_ON_TARGET_UPDATE()
 	local color = "CCFFFFFF";
 	--title:SetText("{#00FF33}{@st40}"..monRank.."{/}{/}");
 
-	if monRank == "NPC" or monRank == "MISC" then
+	if monRank == "NPC" or monRank == "MISC" or (monRank == "Material" and SCR_Get_MON_HR(monCls)*SCR_Get_MON_CRTDR(monCls) == 1) then
 		color = "DD00FF33";
 		y = -10;
 		--title:SetText("{#00FF33}{@st40}"..monRank.."{/}{/}");
@@ -308,7 +307,7 @@ function AL_ON_TARGET_UPDATE()
 			local pc = GetMyPCObject();
 			local gema,nota = GEMANOTA_CALC(monCls);
 			monCls.Lv = monCls.Level
-
+			
 			local hitrate = SCR_Get_MON_DR(monCls) / pc.HR;
 			if hitrate < 1 then
 				hitrate = 1;
@@ -316,12 +315,14 @@ function AL_ON_TARGET_UPDATE()
 			hitrate = math.floor(100-(((hitrate^0.65)-1)*100));
 
 			local avoidrate = pc.DR / SCR_Get_MON_HR(monCls);
+			-- print (pc.DR..' '..SCR_Get_MON_HR(monCls))
 			if avoidrate < 1 then
 				avoidrate = 1;
 			end
 			avoidrate = math.floor(((avoidrate^0.65)-1)*100);
 
 			local crirate = pc.CRTHR / SCR_Get_MON_CRTDR(monCls);
+			-- print (pc.CRTHR..' '..SCR_Get_MON_CRTDR(monCls))
 			if crirate < 1 then
 				crirate = 1;
 			end
@@ -355,7 +356,7 @@ function AL_ON_TARGET_UPDATE()
 			end
 		end
 	end
-
+	
 	itemimg:SetColorTone(color);
 	itembgimg:SetColorTone(color);
 	AL_CHANGE_SCALE(frame, scale);
@@ -365,7 +366,7 @@ function AL_ON_TARGET_UPDATE()
 	y = y - _h;
 	if frame:IsVisible() == 0 then frame:ShowWindow(1); end
 	return scale, y;
-
+	
 end
 
 function GEMANOTA_CALC(monCls)
@@ -391,10 +392,10 @@ end
 
 function AL_CHANGE_SCALE(frame, scale)
 	if not scale then scale = 1 end
-
+	
 	local itembgimg = GET_CHILD_RECURSIVELY(frame, "itembgimg");
 	local itemimg = GET_CHILD_RECURSIVELY(frame, "itemimg");
-
+	
 	frame:Resize(120*scale, 120*scale);
 	itembgimg:Resize(120*scale, 120*scale);
 	itemimg:Resize(75*scale, 75*scale);
