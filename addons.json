@@ -32,7 +32,7 @@
 		"fileVersion" : "v1.1.0",
 		"releaseTag" : "altarget",
 		"unicode" : "⛄",
-		"updateInfo":"v1.1 fixed yellow text not showing after 19/02/19 update. fixed not being able to leave set message blank.",
+		"updateInfo":"v1.1 fixed yellow text not showing after 19/02/19 update. fixed not being able to leave set message blank",
 		"description" : "continuation of cdtracker addon post-re:build",
 		"tags" : [
 			"target"
