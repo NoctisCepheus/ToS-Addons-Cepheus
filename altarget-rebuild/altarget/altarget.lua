@@ -319,13 +319,14 @@ function AL_ON_TARGET_UPDATE()
 				hitrate = 1;
 			end
 			hitrate = math.floor(100-(((hitrate^0.65)-1)*100));
+			if hitrate < 50 then hitrate = '[50]' end
 
 			local avoidrate = pc.DR / SCR_Get_MON_HR(monCls);
 			if avoidrate < 1 then
 				avoidrate = 1;
 			end
 			avoidrate = math.floor(((avoidrate^0.65)-1)*100);
-			if avoidrate > 100 then avoidrate = 100 end
+			if avoidrate > 50 then avoidrate = '[50]' end
 
 			local crirate = pc.CRTHR / SCR_Get_MON_CRTDR(monCls);
 			if crirate < 1 then
