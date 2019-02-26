@@ -56,16 +56,20 @@ function ALTARGET_ON_INIT(addon, frame)
 		g.loaded = true;
 	end
 
+	eqisleather = false
+	
 	--acutil.slashCommand("/al", g.processCommand);
 	acutil.slashCommand("/al", AL_COMMAND);
 	acutil.setupHook(AL_LOCKTARGET, 'CTRLTARGETUI_OPEN');
 	acutil.setupHook(AL_UNLOCKTARGET, 'CTRLTARGETUI_CLOSE');
+	acutil.setupEvent(addon, 'SET_EQUIP_LIST', 'AL_CHECK_EQUIP')
 	addon:RegisterMsg('TARGET_SET', 'AL_ON_TARGET');
 	addon:RegisterMsg('TARGET_UPDATE', 'AL_ON_TARGET_UPDATE');
 	addon:RegisterMsg('BUFF_ADD', 'AL_ON_TARGET_UPDATE')
 	addon:RegisterMsg('BUFF_REMOVE', 'AL_ON_TARGET_UPDATE')
 	addon:RegisterMsg('TARGET_BUFF_ADD', 'AL_ON_TARGET_UPDATE')
 	addon:RegisterMsg('TARGET_BUFF_REMOVE', 'AL_ON_TARGET_UPDATE')
+	addon:RegisterMsg('GAME_START', 'AL_CHECK_EQUIP')
 --	addon:RegisterMsg('TARGET_CLEAR', 'AL_ON_TARGET_CLEAR');
 
 end
@@ -187,11 +191,8 @@ function AL_ON_TARGET()
 	if monCls == nil then
 		return;
 	end
-	
-	-- print ('rank='..monRank..' name='..groupName)
 
 	if monRank == "Material" and groupName ~= "Monster" then
-		-- print ("off")
 		frame:ShowWindow(0);
 		return;
 	end
@@ -314,29 +315,25 @@ function AL_ON_TARGET_UPDATE()
 			monCls.Lv = monCls.Level
 			
 			local hitrate = SCR_Get_MON_DR(monCls) / pc.HR;
-			-- print (SCR_Get_MON_DR(monCls)..' '..pc.HR)
 			if hitrate < 1 then
 				hitrate = 1;
 			end
 			hitrate = math.floor(100-(((hitrate^0.65)-1)*100));
-			if hitrate < 50 then hitrate = '[50]' end
 
 			local avoidrate = pc.DR / SCR_Get_MON_HR(monCls);
-			-- print (pc.DR..' '..SCR_Get_MON_HR(monCls))
 			if avoidrate < 1 then
 				avoidrate = 1;
 			end
 			avoidrate = math.floor(((avoidrate^0.65)-1)*100);
-			if avoidrate > 50 then avoidrate = '[50]' end
+			if avoidrate > 100 then avoidrate = 100 end
 
 			local crirate = pc.CRTHR / SCR_Get_MON_CRTDR(monCls);
-			-- print (pc.CRTHR..' '..SCR_Get_MON_CRTDR(monCls))
 			if crirate < 1 then
 				crirate = 1;
 			end
-			-- print (crirate)
 			crirate = math.floor(((crirate^0.6)-1)*100);
-			if crirate > 50 then crirate = AL_CHECK_EQUIP(crirate) end
+			if crirate > 60 and eqisleather then crirate = '[60]'
+			elseif crirate > 50 then crirate = '[50]' end
 
 			--title:SetText("{@st42}{#FFCC66}"..tostring(handle)..":"..tostring(handle).."{/}{/}");
 			if g.settings.hitflg then
@@ -423,7 +420,7 @@ function AL_ON_TARGET_CLEAR(msgFrame, msg, argStr, handle)
 	frame:ShowWindow(0);
 end
 
-function AL_CHECK_EQUIP(crirate)
+function AL_CHECK_EQUIP()
 	
 	local eqlist = session.GetEquipItemList()
 	local eqType = {"SHIRT", "GLOVES", "PANTS", "BOOTS"};
@@ -435,12 +432,9 @@ function AL_CHECK_EQUIP(crirate)
 		local obj = GetIES(eq:GetObject());
 		
 		if obj.Material ~= 'Leather' then
-			return '[50]'
+			eqisleather = false
+			return
 		end
 	end
-	if crirate > 60 then
-		return '[60]'
-	end
-	return crirate
 end
 	
