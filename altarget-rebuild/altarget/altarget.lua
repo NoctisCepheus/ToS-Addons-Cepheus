@@ -333,7 +333,7 @@ function AL_ON_TARGET_UPDATE()
 			end
 			crirate = math.floor(((crirate^0.6)-1)*100);
 			if crirate > 60 and eqisleather then crirate = '[60]'
-			elseif crirate > 50 then crirate = '[50]' end
+			elseif crirate > 50 and not eqisleather then crirate = '[50]' end
 
 			--title:SetText("{@st42}{#FFCC66}"..tostring(handle)..":"..tostring(handle).."{/}{/}");
 			if g.settings.hitflg then
@@ -422,6 +422,7 @@ end
 
 function AL_CHECK_EQUIP()
 	
+	-- print ("AL_CHECK_EQUIP")
 	local eqlist = session.GetEquipItemList()
 	local eqType = {"SHIRT", "GLOVES", "PANTS", "BOOTS"};
 	
@@ -433,8 +434,12 @@ function AL_CHECK_EQUIP()
 		
 		if obj.Material ~= 'Leather' then
 			eqisleather = false
+			AL_ON_TARGET_UPDATE()
 			return
 		end
 	end
+	eqisleather = true
+	AL_ON_TARGET_UPDATE()
+
 end
 	
