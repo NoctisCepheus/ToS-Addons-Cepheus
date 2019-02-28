@@ -57,6 +57,7 @@ function ALTARGET_ON_INIT(addon, frame)
 	end
 
 	eqisleather = false
+	grade = 1
 	
 	--acutil.slashCommand("/al", g.processCommand);
 	acutil.slashCommand("/al", AL_COMMAND);
@@ -187,6 +188,7 @@ function AL_ON_TARGET()
 	local monCls = GetClassByType("Monster", actor:GetType());
 	local monRank = monCls.MonRank;
 	local groupName = monCls.GroupName
+	monCls.Lv = monCls.Level
 
 	if monCls == nil then
 		return;
@@ -252,9 +254,10 @@ function AL_ON_TARGET_UPDATE()
 	local monCls = GetClassByType("Monster", actor:GetType());
 	local monRank = monCls.MonRank;
 	local groupName = monCls.GroupName
+	monCls.Lv = monCls.Level
 	
 	-- print (monCls.ClassID..' rank='..monRank..' name='..groupName)
-	-- print (SCR_Get_MON_HR(monCls)..' '..SCR_Get_MON_CRTDR(monCls))
+	-- print ('DR:'..SCR_Get_MON_DR(monCls)..' HR:'..SCR_Get_MON_HR(monCls)..' CRTDR:'..SCR_Get_MON_CRTDR(monCls))
 	
 	if	monRank == "Material" and groupName ~= "Monster" then
 		frame:ShowWindow(0);
@@ -269,6 +272,7 @@ function AL_ON_TARGET_UPDATE()
 	local cri = GET_CHILD_RECURSIVELY(frame, "cri");
 	local gematoria = GET_CHILD_RECURSIVELY(frame, "gematoria");
 	local notaricon = GET_CHILD_RECURSIVELY(frame, "notaricon");
+	title:SetText("");
 	hit:SetText("");
 	avoid:SetText("");
 	cri:SetText("");
@@ -283,7 +287,7 @@ function AL_ON_TARGET_UPDATE()
 	if monRank == "NPC" or
 	monRank == "MISC" or
 	monRank == "Pet" or
-	(monRank == "Material" and SCR_Get_MON_HR(monCls)*SCR_Get_MON_CRTDR(monCls) <= 2) then
+	(monRank == "Material" and SCR_Get_MON_DR(monCls)*SCR_Get_MON_HR(monCls)*SCR_Get_MON_CRTDR(monCls) <= 2) then
 		color = "DD00FF33";
 		y = -10;
 		--title:SetText("{#00FF33}{@st40}"..monRank.."{/}{/}");
@@ -306,37 +310,41 @@ function AL_ON_TARGET_UPDATE()
 		if stat ~= nil then
 			local cA = "CC";
 			local cR = "FF";
-			local cG = string.format("%02x", math.floor(stat.HP / stat.maxHP * 255));
+			local cG = string.format("%02x", math.ceil(stat.HP / stat.maxHP * 255));
 			if cG == "0" then cG = "00" end
 			local cB = "00";
 			color = cA..cR..cG..cB;
 			local pc = GetMyPCObject();
 			local gema,nota = GEMANOTA_CALC(monCls);
-			monCls.Lv = monCls.Level
+			
+			local hp = math.ceil((stat.HP / stat.maxHP) * 100)			
 			
 			local hitrate = SCR_Get_MON_DR(monCls) / pc.HR;
 			if hitrate < 1 then
 				hitrate = 1;
 			end
-			hitrate = math.floor(100-(((hitrate^0.65)-1)*100));
+			hitrate = math.floor(100 - (((hitrate^0.65) - 1) * 100));
 			if hitrate < 50 then hitrate = '[50]' end
 
 			local avoidrate = pc.DR / SCR_Get_MON_HR(monCls);
 			if avoidrate < 1 then
 				avoidrate = 1;
 			end
-			avoidrate = math.floor(((avoidrate^0.65)-1)*100);
+			avoidrate = math.floor(((avoidrate^0.65) - 1) * 100);
 			if avoidrate > 50 then avoidrate = '[50]' end
 
 			local crirate = pc.CRTHR / SCR_Get_MON_CRTDR(monCls);
 			if crirate < 1 then
 				crirate = 1;
 			end
-			crirate = math.floor(((crirate^0.6)-1)*100);
+
+			local gradefactor = (100 + (4*grade))/100
+			crirate = math.floor((((crirate^0.6) - 1) * 100) * gradefactor);
 			if crirate > 60 and eqisleather then crirate = '[60]'
 			elseif crirate > 50 and not eqisleather then crirate = '[50]' end
 
 			--title:SetText("{@st42}{#FFCC66}"..tostring(handle)..":"..tostring(handle).."{/}{/}");
+			title:SetText("{@st42}{#66FF66}HP:"..tostring(hp).."%{/}{/}");
 			if g.settings.hitflg then
 				hit:SetText("{@st42}{#6666FF}"..hittxt..tostring(hitrate).."%{/}{/}");
 			else
@@ -426,12 +434,14 @@ function AL_CHECK_EQUIP()
 	-- print ("AL_CHECK_EQUIP")
 	local eqlist = session.GetEquipItemList()
 	local eqType = {"SHIRT", "GLOVES", "PANTS", "BOOTS"};
+	local gradeEq = {1, 1, 1, 1}
 	
 	for i = 1, #eqType do
 
 		local num = item.GetEquipSpotNum(eqType[i])
 		local eq = eqlist:GetEquipItemByIndex(num)
 		local obj = GetIES(eq:GetObject());
+		gradeEq[i] = obj.ItemGrade
 		
 		if obj.Material ~= 'Leather' then
 			eqisleather = false
@@ -439,6 +449,7 @@ function AL_CHECK_EQUIP()
 			return
 		end
 	end
+	grade = math.min(unpack(gradeEq))
 	eqisleather = true
 	AL_ON_TARGET_UPDATE()
 
