@@ -3,10 +3,10 @@
 		"name" : "Altarget-Rebuild",
 		"file" : "altarget",
 		"extension" : "ipf",
-		"fileVersion" : "v1.1.0",
+		"fileVersion" : "v1.2.0",
 		"releaseTag" : "altarget",
 		"unicode" : "⛄",
-		"updateInfo":"now includes hp ratio and evasion and critrate cap, and takes into account equipment grade and type when computing for crit rate.",
+		"updateInfo":"added dynamic color change based on monsters current hp",
 		"description" : "continuation of altarget addon by torahamu post-re:build",
 		"tags" : [
 			"target"

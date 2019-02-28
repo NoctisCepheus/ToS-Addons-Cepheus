@@ -302,18 +302,31 @@ function AL_ON_TARGET_UPDATE()
 		elseif monCls.Size == "XL" then
 			scale = 2;
 		end
-		y = -(120) * scale /2;
+		y = -(60) * scale /2;
 		local stat = info.GetStat(handle);
 
 		--local color = "CCFFFFFF";
 
 		if stat ~= nil then
+		
 			local cA = "CC";
-			local cR = "FF";
-			local cG = string.format("%02x", math.ceil(stat.HP / stat.maxHP * 255));
-			if cG == "0" then cG = "00" end
+			local cR = ''
+			local cG = ''
+			local hpratio = stat.HP / stat.maxHP
+			if 1 >= hpratio and hpratio >= 0.5 then
+				cG = 'FF'
+				cR = string.format("%02x", math.ceil((1-(hpratio-0.5)*2) * 255));
+				if cR == "0" then cR = "00" end
+				end
+			if 0.5 >= hpratio and hpratio >= 0 then
+				cR = 'FF'
+				cG = string.format("%02x", math.ceil(hpratio*2 * 255));
+				if cG == "0" then cG = "00" end
+				end
 			local cB = "00";
+			
 			color = cA..cR..cG..cB;
+			
 			local pc = GetMyPCObject();
 			local gema,nota = GEMANOTA_CALC(monCls);
 			
@@ -344,7 +357,8 @@ function AL_ON_TARGET_UPDATE()
 			elseif crirate > 50 and not eqisleather then crirate = '[50]' end
 
 			--title:SetText("{@st42}{#FFCC66}"..tostring(handle)..":"..tostring(handle).."{/}{/}");
-			title:SetText("{@st42}{#66FF66}HP:"..tostring(hp).."%{/}{/}");
+			title:SetText("{@st42}HP:"..tostring(hp).."%{/}{/}");
+			title:SetColorTone(color)
 			if g.settings.hitflg then
 				hit:SetText("{@st42}{#6666FF}"..hittxt..tostring(hitrate).."%{/}{/}");
 			else
