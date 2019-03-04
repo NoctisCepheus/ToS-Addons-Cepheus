@@ -285,7 +285,10 @@ local CD_SETTINGS_TABLE = {
     chattype   = function(num) local ctype = {'all', 'party'} if num == 1 or num == 2 then settings.chattype = num CHAT_SYSTEM('Chat type set to '..ctype[num]..'.') else CHAT_SYSTEM('Invalid chat type.') end ui.Chat('!!') end;
 
     time       = function(ID, customtime)
-                if customtime ~= nil and type(tonumber(customtime)) == 'number' then
+				if tonumber(customtime) == settings.checkVal and type(tonumber(customtime)) == 'number' then
+					settings.time[skillList[ID]] = nil
+					CHAT_SYSTEM('Time for '..skillList[ID]..' set to '..customtime..'.')
+                elseif customtime ~= nil and type(tonumber(customtime)) == 'number' then
                     settings.time[skillList[ID]]       = tonumber(customtime)
                     CHAT_SYSTEM('Time for '..skillList[ID]..' set to '..customtime..'.')
                 else
@@ -1282,7 +1285,7 @@ function CD_LIST_S()
         cdTrackerUIObjects['skilltime'..k]:SetEventScriptArgString(ui.LBUTTONUP, 'skilltimelabel'..k);
         cdTrackerUIObjects['skilltime'..k]:SetLostFocusingScp("cdTrackerUIObjects['skilltimelabel"..k.."']:ShowWindow(1)")
         cdTrackerUIObjects['skilltime'..k]:SetEventScript(ui.ENTERKEY,"CD_SET_TIME")
-        cdTrackerUIObjects['skilltime'..k]:SetEventScriptArgString(ui.LBUTTONUP,k)
+        cdTrackerUIObjects['skilltime'..k]:SetEventScriptArgString(ui.ENTERKEY,k)
 
         cdTrackerUIObjects['skill_'..k] = cdGroupBox:CreateOrGetControl('richtext','CDTRACKER_BUTTON_SKILL__'..k,10,25+offset,100,5)
         cdTrackerUIObjects['skill_'..k] = tolua.cast(cdTrackerUIObjects['skill_'..k],'ui::CRichText')
@@ -1374,6 +1377,9 @@ end
 
 function CD_SET_TIME(frame, ctrl, id)
     local timeVal = cdTrackerUIObjects['skilltime'..id]:GetText()
+	if timeVal == '' then
+        timeVal = settings.checkVal
+    end
 
     ui.Chat('/cd time '..id..' '..timeVal)
     
@@ -1387,7 +1393,7 @@ end
 function CD_SET_MAIN_TIME()
     local timeVal = cdTrackerUIObjects['timebox']:GetText()
     if timeVal == '' then
-        return;
+        timeVal = settings.checkVal
     end
 
     ui.Chat('/cd '..timeVal)
@@ -1417,7 +1423,6 @@ end
 
 
 function CD_SEND_CHAT_MESSAGE(frame, ctrl, id)
-	print ("CD_SEND_CHAT_MESSAGE")
     local message = cdTrackerUIObjects['skillmessageinput'..id]:GetText()
     local skills = RETURN_SKILL_LIST()
 	local id = tonumber(id);
@@ -1437,7 +1442,6 @@ function CD_SEND_CHAT_MESSAGE(frame, ctrl, id)
 
     cdTrackerUIObjects['skillmessage'..id]:SetText('{@st46b}{s12}{#ffffff}'..message..'{/}')
     ui.DestroyFrame('CDTRACKER_INPUT')
-	print("passed destroy frame2")
     CD_LIST()
 end
 

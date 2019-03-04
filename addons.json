@@ -29,11 +29,11 @@
 		"name" : "CDtracker-Rebuild",
 		"file" : "cdtracker",
 		"extension" : "ipf",
-		"fileVersion" : "v1.0.2",
+		"fileVersion" : "v3.0.11",
 		"releaseTag" : "cdtracker",
 		"unicode" : "⛄",
-		"updateInfo":"fixed yellow text not showing after 19/02/19 update. fixed not being able to leave set message blank",
-		"description" : "continuation of cdtracker addon byaxjv post-re:build",
+		"updateInfo":"Fixed not being able to set a custom time with skills. You can now leave entries blank. Leaving them blank will revert them to the default value.",
+		"description" : "continuation of cdtracker addon by axjv post-re:build",
 		"tags" : [
 			"cooldown",
 			"cd"
